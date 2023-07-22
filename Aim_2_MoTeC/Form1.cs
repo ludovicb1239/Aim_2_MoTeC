@@ -31,7 +31,7 @@ namespace Aim_2_MoTeC
         {
             if (folderMode)
             {
-                FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+                FolderBrowserDialog folderBrowserDialog = new();
 
                 if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -41,7 +41,7 @@ namespace Aim_2_MoTeC
             }
             else
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
+                OpenFileDialog openFileDialog = new();
                 openFileDialog.Filter = "DRK Files (*.drk)|*.drk";
                 openFileDialog.Title = "Select a DRK File";
 
@@ -54,7 +54,7 @@ namespace Aim_2_MoTeC
         }
         private void browseButton2_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            FolderBrowserDialog folderBrowserDialog = new();
 
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
@@ -66,7 +66,7 @@ namespace Aim_2_MoTeC
         {
             BackgroundWorker worker = (BackgroundWorker)sender;
 
-            List<string> filePaths = new List<string>();
+            List<string> filePaths = new();
 
             if (folderMode)
                 SearchForDrkFiles(filePath, filePaths);
@@ -75,13 +75,12 @@ namespace Aim_2_MoTeC
 
             foreach (string path in filePaths)
             {
-                int id;
-                if (!getID(path, out id)) throw new Exception("Failed to get ID using dll");
+                if (!getID(path, out int id)) throw new Exception("Failed to get ID using dll");
 
                 bool usingRAW_GPS = useRaw.Checked;
                 bool convertName = renameBox.Checked;
 
-                DataLog data_log = new DataLog();
+                DataLog data_log = new();
 
                 data_log.fromXRK(id, worker, usingRAW_GPS, convertName);
 
@@ -89,9 +88,9 @@ namespace Aim_2_MoTeC
 
                 DateTimeStruct dateTime = XRK.GetDateAndTime(id);
 
-                MotecLog motec_log = new MotecLog();
+                MotecLog motec_log = new();
                 motec_log.driver = XRK.GetRacerName(id);
-                motec_log.vehicle_id = XRK.GetViheculeName(id);
+                motec_log.vehicle_id = XRK.GetVehiculeName(id);
                 motec_log.venue_name = XRK.GetTrackName(id);
                 motec_log.event_session = XRK.GetVenueTypeName(id);
                 motec_log.short_comment = XRK.GetChampionshipName(id);
@@ -166,18 +165,17 @@ namespace Aim_2_MoTeC
             DataLabel.Text = "Reading Data...";
             DataLabel.Refresh();
 
-            List<string> filePaths = new List<string>();
+            List<string> filePaths = new();
 
             if (folderMode)
                 SearchForDrkFiles(filePath, filePaths);
             else
                 filePaths.Add(filePath);
 
-            int id;
-            if (!getID(filePaths[0], out id)) return;
+            if (!getID(filePaths[0], out int id)) return;
 
-            List<string> info = new List<string>();
-            info.Add("Vehicule name:     " + XRK.GetViheculeName(id));
+            List<string> info = new();
+            info.Add("Vehicule name:     " + XRK.GetVehiculeName(id));
             info.Add("Track name:        " + XRK.GetTrackName(id));
             info.Add("Racer name:        " + XRK.GetRacerName(id));
             info.Add("Championship name: " + XRK.GetChampionshipName(id));
@@ -206,8 +204,7 @@ namespace Aim_2_MoTeC
             for (int c = 0; c < channelCount; c++)
             {
                 string name = XRK.GetChannelName(id, c);
-                nameConvert convert;
-                if (ChannelNamesConvert.containsName(name, out convert))
+                if (ChannelNamesConvert.containsName(name, out nameConvert convert))
                     listBox1.Items.Add(name + new string('\t', 4 - ((name.Length + 1) / 4)) + "--> " + convert.to);
                 else
                     listBox1.Items.Add(name);
@@ -215,7 +212,7 @@ namespace Aim_2_MoTeC
             XRK.CloseFile(filePaths[0]);
             listBox1.Refresh();
         }
-        public bool getID(string path, out int id)
+        public static bool getID(string path, out int id)
         {
             try
             {

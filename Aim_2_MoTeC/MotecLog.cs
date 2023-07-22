@@ -6,8 +6,6 @@ namespace Aim_2_MoTeC
 {
     class MotecLog
     {
-        public static readonly uint CHANNEL_HEADER_SIZE = 124;
-
         public string driver;
         public string vehicle_id;
         public string venue_name;
@@ -40,28 +38,18 @@ namespace Aim_2_MoTeC
             ld_header = new LdHead(driver, vehicle_id, venue_name, datetime, short_comment, event_session);
         }
 
-        public void AddChannel(Channel log_channel)
-        {
-            // Channel specs
-            ushort freq = log_channel.freq;
-            ushort shift = 0, multiplier = 1, scale = 1;
-
-            short decimals = 0;
-
-            LdChan ld_channel = new LdChan(freq, shift, multiplier, scale, decimals, log_channel.name, "", log_channel.units);
-
-            // Add in the channel data
-            ld_channel.Data = log_channel.values.ToArray();
-
-            // Add the ld channel
-            ld_channels.Add(ld_channel);
-        }
-
         public void AddDataLog(DataLog data_log)
         {
             foreach (KeyValuePair<string, Channel> channel in data_log.channels)
             {
-                AddChannel(channel.Value);
+                Channel log_channel = channel.Value;
+                LdChan ld_channel = new(log_channel.freq, (ushort)0, (ushort)1, (ushort)1, (short)0, log_channel.name, log_channel.short_name, log_channel.units);
+
+                // Add in the channel data
+                ld_channel.Data = log_channel.values.ToArray();
+
+                // Add the ld channel
+                ld_channels.Add(ld_channel);
             }
 
             int fastestLap = 0;
@@ -84,7 +72,7 @@ namespace Aim_2_MoTeC
         {
             if (ld_channels.Any())
             {
-                LdData ld_data = new LdData(ld_header, ld_channels, ld_beacons, ld_lapInfo);
+                LdData ld_data = new(ld_header, ld_channels, ld_beacons, ld_lapInfo);
                 ld_data.prepPointers();
                 ld_data.Write(logFilename, extensionFilename);
 

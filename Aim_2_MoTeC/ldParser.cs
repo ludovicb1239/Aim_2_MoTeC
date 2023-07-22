@@ -9,10 +9,10 @@ namespace Aim_2_MoTeC
 {
     public static class PointerConstants
     {
-        public static uint EVENT_PTR = 1762;
+        public const uint EVENT_PTR = 1762;
         public const uint HEADER_PTR = 0x3448; //those should not be hardcoded
-        public static uint CHANNEL_META_PRT = 13384;
-        public static uint CHANNEL_DATA_PRT = 23056;
+        public const uint CHANNEL_META_PRT = 13384;
+        public static uint CHANNEL_DATA_PRT;
         public const uint CHANNEL_HEADER_SIZE = 124;
     }
     public class LdData
@@ -33,7 +33,7 @@ namespace Aim_2_MoTeC
         {
             List<uint> metaAddrs = channs.Select((channel, i) =>
                 {
-                    int metaOffset = i * (int)PointerConstants.CHANNEL_HEADER_SIZE;
+                    int metaOffset = i * 124;
                     return (uint)(PointerConstants.HEADER_PTR + metaOffset);
                 }).ToList();
 
@@ -44,7 +44,7 @@ namespace Aim_2_MoTeC
 
             List<uint> sampleAddrs = channs.Select((channel, i) =>
                 {
-                    int metaOffset = channs.Count * (int)PointerConstants.CHANNEL_HEADER_SIZE;
+                    int metaOffset = channs.Count * 124;
                     int sampleOffset = sampleByteSizes.Take(i).Sum();
 
                     return (uint)(PointerConstants.HEADER_PTR + metaOffset + sampleOffset);
@@ -69,7 +69,7 @@ namespace Aim_2_MoTeC
         {
             try
             {
-                using (BinaryWriter writer = new BinaryWriter(File.Open(logFilename, FileMode.Create)))
+                using (BinaryWriter writer = new(File.Open(logFilename, FileMode.Create)))
                 {
 
                     head.Write(writer, channs.Count);
@@ -91,7 +91,7 @@ namespace Aim_2_MoTeC
                         }
                     }
                 }
-                using (StreamWriter writer = new StreamWriter(File.Open(extensionFilename, FileMode.Create)))
+                using (StreamWriter writer = new(File.Open(extensionFilename, FileMode.Create)))
                 {
                     writer.WriteLine("<?xml version=\"1.0\"?>\n<LDXFile Locale=\"English_Canada.1252\" DefaultLocale=\"C\" Version=\"1.6\">\n <Layers>\n  <Layer>\n   <MarkerBlock>\n    <MarkerGroup Name=\"Beacons\" Index=\"3\">"); //index 5
                     for (int i = 0; i < beacons.Count; i++)

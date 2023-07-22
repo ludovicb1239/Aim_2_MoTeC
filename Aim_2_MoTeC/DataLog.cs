@@ -35,12 +35,11 @@ namespace Aim_2_MoTeC
             double totalTime = 0;
             AddChannel("Lap Time", "s", 10, "LapTime"); //Sampling those at 10hz
             AddChannel("Lap Number", "", 10, "Lap");
-            List<float> L_val = new List<float>();
-            List<float> L_lap = new List<float>();
+            List<float> L_val = new();
+            List<float> L_lap = new();
             for (int lap = 0; lap < lapsCount; lap++)
             {
-                double v, t;
-                XRK.GetLapInfo(id, lap, out t, out v);
+                XRK.GetLapInfo(id, lap, out double t, out double v);
                 totalTime += v;
                 lapTimes.Add(t);
                 for (double pointingTime = t; pointingTime < t + v; pointingTime += 0.1f)
@@ -57,8 +56,7 @@ namespace Aim_2_MoTeC
             {
                 string name = XRK.GetChannelName(id, c);
                 string name_short = "";
-                nameConvert stru;
-                if (convertName && ChannelNamesConvert.containsName(name, out stru))
+                if (convertName && ChannelNamesConvert.containsName(name, out nameConvert stru))
                 {
                     name = stru.to;
                     name_short = stru.to_short;
