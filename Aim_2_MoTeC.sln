@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aim_2_MoTeC", "Aim_2_MoTeC\Aim_2_MoTeC.csproj", "{2C20B391-982E-485F-80F3-20FC92F9D739}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2C20B391-982E-485F-80F3-20FC92F9D739}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C20B391-982E-485F-80F3-20FC92F9D739}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C20B391-982E-485F-80F3-20FC92F9D739}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C20B391-982E-485F-80F3-20FC92F9D739}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6E723887-E972-4E2C-BF13-05D304BC6EC9}
+	EndGlobalSection
+EndGlobal
