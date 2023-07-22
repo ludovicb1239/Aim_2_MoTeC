@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace Aim_2_MoTeC
 {
@@ -41,12 +42,11 @@ namespace Aim_2_MoTeC
             {
                 XRK.GetLapInfo(id, lap, out double t, out double v);
                 totalTime += v;
-                lapTimes.Add(t);
-                for (double pointingTime = t; pointingTime < t + v; pointingTime += 0.1f)
-                {
-                    L_val.Add((float)v);
-                    L_lap.Add(lap);
-                }
+                lapTimes.Add(t); 
+
+                int numIterations = (int)(v * 10); // Calculate the number of iterations
+                L_val.AddRange(Enumerable.Repeat((float)v, numIterations));
+                L_lap.AddRange(Enumerable.Repeat((float)lap, numIterations));
             }
             channels["Lap Time"].setValues(L_val);
             channels["Lap Number"].setValues(L_lap);

@@ -7,7 +7,7 @@
     <ApplicationIcon>download.ico</ApplicationIcon>
     <Authors>Ludovic Bouchard</Authors>
     <Description>Aim to MoTeC i2 converter made for developpement purposes</Description>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

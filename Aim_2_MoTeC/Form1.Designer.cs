@@ -182,7 +182,7 @@ namespace Aim_2_MoTeC
             // 
             this.pathOutput.Location = new System.Drawing.Point(303, 116);
             this.pathOutput.Name = "pathOutput";
-            this.pathOutput.PlaceholderText = "path output";
+            this.pathOutput.PlaceholderText = "path output (optionnal)";
             this.pathOutput.Size = new System.Drawing.Size(455, 25);
             this.pathOutput.TabIndex = 14;
             this.pathOutput.TextChanged += new System.EventHandler(this.pathOutput_TextChanged);

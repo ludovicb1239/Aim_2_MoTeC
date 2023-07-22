@@ -125,7 +125,7 @@ namespace Aim_2_MoTeC
                 data_log.Clear();
             }
 
-            e.Result = "Done! File saved in " + outFilePath;
+            e.Result = "Done! File saved in " + (outFilePath == "" ? "the same folder as the drk file" : outFilePath);
         }
         private void ConvertWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -157,7 +157,7 @@ namespace Aim_2_MoTeC
             else
             {
                 Debug.WriteLine("Conversion result: " + e.Result);
-                MessageBox.Show("Conversion result: " + e.Result.ToString(), "Conversion result", MessageBoxButtons.OK);
+                MessageBox.Show("Conversion result: " + e.Result.ToString(), "Conversion result", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
         private void readButton_Click(object sender, EventArgs e)
