@@ -62,6 +62,7 @@ namespace Aim_2_MoTeC
                 pathOutput.Text = outFilePath;
             }
         }
+
         private void convertWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = (BackgroundWorker)sender;
@@ -162,6 +163,7 @@ namespace Aim_2_MoTeC
                 MessageBox.Show("Conversion result: " + e.Result.ToString(), "Conversion result", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
+
         private void readButton_Click(object sender, EventArgs e)
         {
             DataLabel.Text = "Reading Data...";
@@ -209,6 +211,16 @@ namespace Aim_2_MoTeC
             for (int c = 0; c < channelCount; c++)
             {
                 string name = XRK.GetChannelName(id, c);
+                if (nameConverter.containsName(name, out nameConvert convert))
+                    listBox1.Items.Add(name + new string('\t', 4 - ((name.Length + 1) / 4)) + "--> " + convert.to);
+                else
+                    listBox1.Items.Add(name);
+            }
+            int gpsChannelCount = useRaw.Checked ? XRK.GetGPSRawChannelsCount(id) : XRK.GetGPSChannelsCount(id);
+            listBox1.Items.Add("-- GPS --" + new string('\t', 3) + "-- Rename --");
+            for (int c = 0; c < gpsChannelCount; c++)
+            {
+                string name = useRaw.Checked ? XRK.GetGPSRawChannelName(id, c) : XRK.GetGPSChannelName(id, c);
                 if (nameConverter.containsName(name, out nameConvert convert))
                     listBox1.Items.Add(name + new string('\t', 4 - ((name.Length + 1) / 4)) + "--> " + convert.to);
                 else

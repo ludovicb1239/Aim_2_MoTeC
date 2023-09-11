@@ -2,12 +2,17 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>download.ico</ApplicationIcon>
     <Authors>Ludovic Bouchard</Authors>
     <Description>Aim to MoTeC i2 converter made for developpement purposes</Description>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
+    <Title>Aim To MoTeC</Title>
+    <PackageProjectUrl>https://github.com/ludovicb1239/Aim_2_MoTeC</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/ludovicb1239/Aim_2_MoTeC</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -18,6 +23,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <None Update="MatLabXRK-2017-64-ReleaseU.dll">
