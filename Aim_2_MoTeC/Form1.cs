@@ -73,6 +73,8 @@ namespace Aim_2_MoTeC
             else
                 filePaths.Add(filePath);
 
+            ChannelNamesConvert nameConverter = new ChannelNamesConvert();
+
             foreach (string path in filePaths)
             {
                 if (!getID(path, out int id)) throw new Exception("Failed to get ID using dll");
@@ -81,7 +83,7 @@ namespace Aim_2_MoTeC
                 bool convertName = renameBox.Checked;
 
                 DataLog data_log = new();
-
+                data_log.nameConverter = nameConverter;
                 data_log.fromXRK(id, worker, usingRAW_GPS, convertName);
 
                 if (data_log.channels.Count == 0) throw new Exception("Failed to find any channels in log data");
@@ -198,13 +200,16 @@ namespace Aim_2_MoTeC
 
             DataLabel.Text = string.Join("\n", info.ToArray());
 
+
+            ChannelNamesConvert nameConverter = new ChannelNamesConvert();
+
             listBox1.Items.Clear();
             int channelCount = XRK.GetChannelsCount(id);
             listBox1.Items.Add("-- From --" + new string('\t', 2) + "-- Rename --");
             for (int c = 0; c < channelCount; c++)
             {
                 string name = XRK.GetChannelName(id, c);
-                if (ChannelNamesConvert.containsName(name, out nameConvert convert))
+                if (nameConverter.containsName(name, out nameConvert convert))
                     listBox1.Items.Add(name + new string('\t', 4 - ((name.Length + 1) / 4)) + "--> " + convert.to);
                 else
                     listBox1.Items.Add(name);

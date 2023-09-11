@@ -1,4 +1,10 @@
-﻿namespace Aim_2_MoTeC
+﻿using Aim_2_MoTeC;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
+
+namespace Aim_2_MoTeC
 {
     public struct nameConvert
     {
@@ -13,26 +19,57 @@
             this.to_short = to_short;
         }
     }
-    public static class ChannelNamesConvert
+    public class ChannelNamesConvert
     {
-        public static nameConvert[] NAMES =
+        private nameConvert[] NAMES;
+        public ChannelNamesConvert()
         {
-            new nameConvert("ASteering", "Steered Angle", "Str Ang"),
-            new nameConvert("Brake", "Brake Pos", "Brk Pos"),
-            new nameConvert("SpeedVeh", "Ground Speed", "Gnd Spd"),
-            new nameConvert("RPM", "Engine RPM", "RPM"),
-            new nameConvert("GLat", "G Force Lat", "G Lat"),
-            new nameConvert("GVert", "G Force Vert", "G Vert"),
-            new nameConvert("GLong", "G Force Long", "G Long"),
-            new nameConvert("GLong", "G Force Long", "G Long"),
-            new nameConvert("VWheelFL", "Wheel Speed FL", "WSpd FL"),
-            new nameConvert("VWheelFR", "Wheel Speed FR", "WSpd FR"),
-            new nameConvert("VWheelRL", "Wheel Speed RL", "WSpd RL"),
-            new nameConvert("VWheelRR", "Wheel Speed RR", "WSpd RR"),
-            new nameConvert("WaterTemps", "Eng Water Temp", "WaterTemp"),
-        };
+            NAMES = ParseTextFile("NameConversion.txt");
+        }
 
-        public static bool containsName(string from, out nameConvert nameStruct)
+        static nameConvert[] ParseTextFile(string filePath)
+        {
+            List<nameConvert> mappings = new List<nameConvert>();
+
+            try
+            {
+                string[] lines = File.ReadAllLines(filePath);
+
+                foreach (string line in lines)
+                {
+                    if (line[0] != '#')
+                    {
+                        // Use the modified regular expression pattern to handle optional last value
+                        Match match = Regex.Match(line, "\"([^\"]+)\", \"([^\"]+)\", \"([^\"]*)\"");
+
+                        if (match.Success)
+                        {
+                            nameConvert c = new nameConvert();
+                            c.from = match.Groups[1].Value;
+                            c.to = match.Groups[2].Value;
+                            c.to_short = match.Groups[3].Value;
+
+                            // If the last value is empty, set it to an empty string
+                            if (c.to_short == string.Empty)
+                            {
+                                c.to_short = "";
+                            }
+
+                            mappings.Add(c);
+                        }
+                    }
+                }
+
+                return mappings.ToArray();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return null;
+            }
+        }
+
+        public bool containsName(string from, out nameConvert nameStruct)
         {
             foreach (nameConvert str in NAMES)
             {
@@ -47,3 +84,4 @@
         }
     }
 }
+

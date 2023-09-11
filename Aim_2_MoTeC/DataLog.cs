@@ -10,6 +10,7 @@ namespace Aim_2_MoTeC
         public string name;
         public Dictionary<string, Channel> channels;
         public List<double> lapTimes;
+        public ChannelNamesConvert nameConverter;
 
         public DataLog(string name = "")
         {
@@ -56,10 +57,13 @@ namespace Aim_2_MoTeC
             {
                 string name = XRK.GetChannelName(id, c);
                 string name_short = "";
-                if (convertName && ChannelNamesConvert.containsName(name, out nameConvert stru))
+                if (convertName && nameConverter != null)
                 {
-                    name = stru.to;
-                    name_short = stru.to_short;
+                    if (nameConverter.containsName(name, out nameConvert stru))
+                    {
+                        name = stru.to;
+                        name_short = stru.to_short;
+                    }
                 }
 
                 string units = XRK.GetChannelUnits(id, c);

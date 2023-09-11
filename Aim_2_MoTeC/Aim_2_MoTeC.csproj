@@ -7,7 +7,7 @@
     <ApplicationIcon>download.ico</ApplicationIcon>
     <Authors>Ludovic Bouchard</Authors>
     <Description>Aim to MoTeC i2 converter made for developpement purposes</Description>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -25,6 +25,9 @@
     </None>
     <None Update="MatLabXRK-2022-64-ReleaseU.dll">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="NameConversion.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
