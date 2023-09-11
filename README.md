@@ -24,7 +24,7 @@ Uses a dll to read from the file.
 - Reading all of the data contained in an Aim File
 - Converting names from Aim standart to MoTeC standart
 - Fully open source
-- Sinple interface
+- Simple interface
 - Sub-folder search: searched all sub folders for files and converts all of them
 - Read data preview button before converting
 - Choice between processed or raw GPS data (using Aim dll)
