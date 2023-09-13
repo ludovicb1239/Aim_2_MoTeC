@@ -19,6 +19,8 @@ Programmed in VS C#.
 
 Uses a dll to read from the file.
 
+We invested a significant amount of effort in reverse engineering to decipher Motec's proprietary file format. This was necessary to enable the file to be both written and opened by i2 Pro. If i2 detects even a minor formatting error in the file, it will either refuse to read it or recognize it as a Standard file rather than a Pro file.
+
 ## Features
 
 - Reading all of the data contained in an Aim File
