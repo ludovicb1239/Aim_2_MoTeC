@@ -24,7 +24,7 @@ We invested a significant amount of effort in reverse engineering to decipher Mo
 ## Features
 
 - Reading all of the data contained in an Aim File
-- Converting names from Aim standart to MoTeC standart
+- Converting names from Aim standart to MoTeC standard
 - Fully open source
 - Simple interface
 - Sub-folder search: searched all sub folders for files and converts all of them
