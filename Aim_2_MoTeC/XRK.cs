@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace Aim_2_MoTeC
 {
@@ -16,7 +18,7 @@ namespace Aim_2_MoTeC
         public int tm_yday;  // days since January 1 (0-365)
         public int tm_isdst; // Daylight Saving Time flag
     }
-    class XRK
+    public static class XRK
     {
         /// <summary>Name of the library</summary>
         const string libName = "MatLabXRK-2017-64-ReleaseU.dll";
@@ -570,6 +572,25 @@ namespace Aim_2_MoTeC
         public static int GetLapGPSRawChannelSamples(int idxf, int idxl, int idxc, double[] ptimes, double[] pvalues, int cnt)
         {
             return get_lap_GPS_raw_channel_samples(idxf, idxl, idxc, ptimes, pvalues, cnt);
+        }
+
+
+        public static bool getID(string path, out int id)
+        {
+            try
+            {
+                id = OpenFile(path);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to load MatLabXRK-2017-64-ReleaseU.dll", "Error", MessageBoxButtons.OK);
+
+                Debug.WriteLine("Failed to load MatLabXRK-2017-64-ReleaseU.dll");
+                Debug.WriteLine(ex.Message);
+                id = -1;
+                return false;
+            }
         }
     }
 }

@@ -10,9 +10,8 @@ namespace Aim_2_MoTeC
 {
     public partial class Form1 : Form
     {
-        string filePath = "";
-        string outFilePath = "";
-        bool folderMode = false;
+        private string inFilePath = "", outFilePath = "";
+        private bool folderMode = false;
         public Form1()
         {
             InitializeComponent();
@@ -27,7 +26,7 @@ namespace Aim_2_MoTeC
             versionLabel.Text = "V" + fileVersionInfo.ProductVersion;
         }
 
-        private void browseButton1_Click(object sender, EventArgs e)
+        private void BrowseInputButton_Click(object sender, EventArgs e)
         {
             if (folderMode)
             {
@@ -35,8 +34,8 @@ namespace Aim_2_MoTeC
 
                 if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                 {
-                    filePath = folderBrowserDialog.SelectedPath;
-                    pathInput.Text = filePath;
+                    inFilePath = folderBrowserDialog.SelectedPath;
+                    PathInputText.Text = inFilePath;
                 }
             }
             else
@@ -47,41 +46,47 @@ namespace Aim_2_MoTeC
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    filePath = openFileDialog.FileName;
-                    pathInput.Text = filePath;
+                    inFilePath = openFileDialog.FileName;
+                    PathInputText.Text = inFilePath;
                 }
             }
         }
-        private void browseButton2_Click(object sender, EventArgs e)
+        private void BrowseOutputButton_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog folderBrowserDialog = new();
 
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
                 outFilePath = folderBrowserDialog.SelectedPath;
-                pathOutput.Text = outFilePath;
+                PathOutputText.Text = outFilePath;
             }
         }
 
-        private void convertWorker_DoWork(object sender, DoWorkEventArgs e)
+        private void ConvertButton_Click(object sender, EventArgs e)
+        {
+            // Start the worker to make it work in background
+            convertWorker.RunWorkerAsync();
+            updateButtons();
+        }
+        private void ConvertWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = (BackgroundWorker)sender;
 
             List<string> filePaths = new();
 
             if (folderMode)
-                SearchForDrkFiles(filePath, filePaths);
+                SearchForDrkFiles(inFilePath, filePaths); //Get the list of all of the DRK files
             else
-                filePaths.Add(filePath);
+                filePaths.Add(inFilePath); //Only add to the list the selected DRK file
 
             ChannelNamesConvert nameConverter = new ChannelNamesConvert();
 
             foreach (string path in filePaths)
             {
-                if (!getID(path, out int id)) throw new Exception("Failed to get ID using dll");
+                if (!XRK.getID(path, out int id)) throw new Exception("Failed to get ID using dll");
 
-                bool usingRAW_GPS = useRaw.Checked;
-                bool convertName = renameBox.Checked;
+                bool usingRAW_GPS = UseRawGPSCheckBox.Checked;
+                bool convertName = RenameChannelsCheckBox.Checked;
 
                 DataLog data_log = new();
                 data_log.nameConverter = nameConverter;
@@ -136,12 +141,6 @@ namespace Aim_2_MoTeC
 
             progressBar1.Value = e.ProgressPercentage;
         }
-        private void convertButton_Click(object sender, EventArgs e)
-        {
-            // Start the worker to make it work in background
-            convertWorker.RunWorkerAsync();
-            updateButtons();
-        }
         private void ConvertWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             convertWorker.Dispose();
@@ -172,18 +171,20 @@ namespace Aim_2_MoTeC
             List<string> filePaths = new();
 
             if (folderMode)
-                SearchForDrkFiles(filePath, filePaths);
+                SearchForDrkFiles(inFilePath, filePaths);
             else
-                filePaths.Add(filePath);
+                filePaths.Add(inFilePath);
 
-            if (!getID(filePaths[0], out int id)) return;
+            if (!XRK.getID(filePaths[0], out int id)) return;
 
-            List<string> info = new();
-            info.Add("Vehicule name:     " + XRK.GetVehiculeName(id));
-            info.Add("Track name:        " + XRK.GetTrackName(id));
-            info.Add("Racer name:        " + XRK.GetRacerName(id));
-            info.Add("Championship name: " + XRK.GetChampionshipName(id));
-            info.Add("Venue type name:   " + XRK.GetVenueTypeName(id));
+            List<string> info = new()
+            {
+                "Vehicule name:     " + XRK.GetVehiculeName(id),
+                "Track name:        " + XRK.GetTrackName(id),
+                "Racer name:        " + XRK.GetRacerName(id),
+                "Championship name: " + XRK.GetChampionshipName(id),
+                "Venue type name:   " + XRK.GetVenueTypeName(id)
+            };
 
             DateTimeStruct dateTime = XRK.GetDateAndTime(id);
 
@@ -216,11 +217,11 @@ namespace Aim_2_MoTeC
                 else
                     listBox1.Items.Add(name);
             }
-            int gpsChannelCount = useRaw.Checked ? XRK.GetGPSRawChannelsCount(id) : XRK.GetGPSChannelsCount(id);
+            int gpsChannelCount = UseRawGPSCheckBox.Checked ? XRK.GetGPSRawChannelsCount(id) : XRK.GetGPSChannelsCount(id);
             listBox1.Items.Add("-- GPS --" + new string('\t', 3) + "-- Rename --");
             for (int c = 0; c < gpsChannelCount; c++)
             {
-                string name = useRaw.Checked ? XRK.GetGPSRawChannelName(id, c) : XRK.GetGPSChannelName(id, c);
+                string name = UseRawGPSCheckBox.Checked ? XRK.GetGPSRawChannelName(id, c) : XRK.GetGPSChannelName(id, c);
                 if (nameConverter.containsName(name, out nameConvert convert))
                     listBox1.Items.Add(name + new string('\t', 4 - ((name.Length + 1) / 4)) + "--> " + convert.to);
                 else
@@ -229,54 +230,37 @@ namespace Aim_2_MoTeC
             XRK.CloseFile(filePaths[0]);
             listBox1.Refresh();
         }
-        public static bool getID(string path, out int id)
-        {
-            try
-            {
-                id = XRK.OpenFile(path);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Failed to load MatLabXRK-2017-64-ReleaseU.dll", "Error", MessageBoxButtons.OK);
 
-                Debug.WriteLine("Failed to load MatLabXRK-2017-64-ReleaseU.dll");
-                Debug.WriteLine(ex.Message);
-                id = -1;
-                return false;
-            }
-        }
-
-        void updateButtons()
+        private void updateButtons()
         {
-            bool pathOk = checkIfInputPathOK(filePath);
+            bool pathOk = checkIfInputPathOK(inFilePath);
             convertButton.Enabled = pathOk && !convertWorker.IsBusy;
             readButton.Enabled = pathOk;
         }
-        bool checkIfInputPathOK(string input)
+        private bool checkIfInputPathOK(string input)
         {
             if (input == "") return false;
             if (!folderMode) return Path.GetExtension(input).ToLower() == ".drk";
             else return true;
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void SubFolderCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            folderMode = checkBox1.Checked;
+            folderMode = SubFolderCheckBox.Checked;
             if (folderMode)
             {
-                filePath = Path.GetDirectoryName(filePath);
-                pathInput.Text = filePath;
+                inFilePath = Path.GetDirectoryName(inFilePath);
+                PathInputText.Text = inFilePath;
             }
         }
         private void pathInput_TextChanged(object sender, EventArgs e)
         {
-            filePath = pathInput.Text;
+            inFilePath = PathInputText.Text;
             updateButtons();
         }
         private void pathOutput_TextChanged(object sender, EventArgs e)
         {
-            outFilePath = pathOutput.Text;
+            outFilePath = PathOutputText.Text;
         }
         static void SearchForDrkFiles(string directoryPath, List<string> paths)
         {
