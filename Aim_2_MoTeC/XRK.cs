@@ -586,8 +586,8 @@ namespace Aim_2_MoTeC
             {
                 MessageBox.Show("Failed to load MatLabXRK-2017-64-ReleaseU.dll", "Error", MessageBoxButtons.OK);
 
-                Debug.WriteLine("Failed to load MatLabXRK-2017-64-ReleaseU.dll");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("Failed to load MatLabXRK-2017-64-ReleaseU.dll");
+                Console.WriteLine(ex.Message);
                 id = -1;
                 return false;
             }

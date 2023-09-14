@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace Aim_2_MoTeC
 {
@@ -18,12 +19,20 @@ namespace Aim_2_MoTeC
             updateButtons();
             convertWorker.ProgressChanged += ConvertWorker_ProgressChanged;
             convertWorker.RunWorkerCompleted += ConvertWorker_RunWorkerCompleted;
+            Application.ApplicationExit += onApplicationExit;
 
             // Get the assembly information of the current application
             Assembly assembly = Assembly.GetExecutingAssembly();
             FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
 
             versionLabel.Text = "V" + fileVersionInfo.ProductVersion;
+
+            // Load the previously saved boolean value from settings
+            SubFolderCheckBox.Checked = Properties.Settings.Default.S_UseSubSearch;
+            folderMode = Properties.Settings.Default.S_UseSubSearch;
+            RenameChannelsCheckBox.Checked = Properties.Settings.Default.S_RenameChannels;
+            UseRawGPSCheckBox.Checked = Properties.Settings.Default.S_UseRawGPS;
+
         }
 
         private void BrowseInputButton_Click(object sender, EventArgs e)
@@ -70,6 +79,7 @@ namespace Aim_2_MoTeC
         }
         private void ConvertWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            Console.WriteLine("Worker started conversion");
             BackgroundWorker worker = (BackgroundWorker)sender;
 
             List<string> filePaths = new();
@@ -83,6 +93,8 @@ namespace Aim_2_MoTeC
 
             foreach (string path in filePaths)
             {
+                Console.WriteLine("Converting " + path);
+
                 if (!XRK.getID(path, out int id)) throw new Exception("Failed to get ID using dll");
 
                 bool usingRAW_GPS = UseRawGPSCheckBox.Checked;
@@ -111,6 +123,8 @@ namespace Aim_2_MoTeC
                 motec_log.Initialize();
                 motec_log.AddDataLog(data_log);
 
+                Console.WriteLine("Done adding data log");
+
                 int year = dateTime.tm_year + 1900;
                 int month = dateTime.tm_mon + 1;
                 int day = dateTime.tm_mday;
@@ -118,7 +132,7 @@ namespace Aim_2_MoTeC
                 int minute = dateTime.tm_min;
                 int second = dateTime.tm_sec;
 
-                Debug.WriteLine("Saving MoTeC log...");
+                Console.WriteLine("Saving MoTeC log...");
                 string directoryPath = outFilePath == "" ? Path.GetDirectoryName(path) : outFilePath;
                 string newFileName = string.Format("{0}{1:D2}{2:D2}-{3:D2}{4:D2}{5:D2}.ld", year, month, day, hour, minute, second);
                 string newFileNameExtra = string.Format("{0}{1:D2}{2:D2}-{3:D2}{4:D2}{5:D2}.ldx", year, month, day, hour, minute, second);
@@ -127,12 +141,17 @@ namespace Aim_2_MoTeC
 
                 if (!string.IsNullOrEmpty(directoryPath) && !Directory.Exists(directoryPath))
                 {
-                    Debug.WriteLine("Directory '{0}' does not exist, will create it", directoryPath);
+                    Console.WriteLine("Directory '{0}' does not exist, will create it", directoryPath);
                     Directory.CreateDirectory(directoryPath);
                 }
 
+                Console.WriteLine("Output path " + newFilePath);
+
                 motec_log.Write(newFilePath, newFilePathExtra);
                 data_log.Clear();
+
+
+                Console.WriteLine("Done working on " + path);
             }
 
             e.Result = "Done! File saved in " + (outFilePath == "" ? "the same folder as the drk file" : outFilePath);
@@ -142,7 +161,7 @@ namespace Aim_2_MoTeC
         }
         private void ConvertWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            Debug.WriteLine("Conversion progress: " + e.ProgressPercentage + "%");
+            Console.WriteLine("Conversion progress: " + e.ProgressPercentage + "%");
 
             progressBar1.Value = e.ProgressPercentage;
         }
@@ -153,17 +172,17 @@ namespace Aim_2_MoTeC
 
             if (e.Error != null)
             {
-                Debug.WriteLine("An error occurred during conversion: " + e.Error.Message);
+                Console.WriteLine("An error occurred during conversion: " + e.Error.Message);
                 MessageBox.Show("An error occurred:" + e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else if (e.Cancelled)
             {
-                Debug.WriteLine("Conversion was cancelled.");
+                Console.WriteLine("Conversion was cancelled.");
                 MessageBox.Show("Conversion was cancelled.", "Conversion result", MessageBoxButtons.OK);
             }
             else
             {
-                Debug.WriteLine("Conversion result: " + e.Result);
+                Console.WriteLine("Conversion result: " + e.Result);
                 MessageBox.Show("Conversion result: " + e.Result.ToString(), "Conversion result", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -266,6 +285,15 @@ namespace Aim_2_MoTeC
         private void pathOutput_TextChanged(object sender, EventArgs e)
         {
             outFilePath = PathOutputText.Text;
+        }
+
+        private void onApplicationExit(object sender, EventArgs e)
+        {
+            // Save any changes made by the user back to settings
+            Properties.Settings.Default.S_UseSubSearch   = SubFolderCheckBox.Checked;
+            Properties.Settings.Default.S_RenameChannels = RenameChannelsCheckBox.Checked;
+            Properties.Settings.Default.S_UseRawGPS      = UseRawGPSCheckBox.Checked;
+            Properties.Settings.Default.Save();
         }
         static void SearchForDrkFiles(string directoryPath, List<string> paths)
         {
