@@ -7,6 +7,8 @@ using System.Windows.Forms;
 
 namespace Aim_2_MoTeC
 {
+    using static Encoder;
+    using static PointerConstants;
     public static class PointerConstants
     {
         public const uint EVENT_PTR = 1762;
@@ -15,12 +17,22 @@ namespace Aim_2_MoTeC
         public static uint CHANNEL_DATA_PRT;
         public const uint CHANNEL_HEADER_SIZE = 124;
     }
+    public static class Encoder
+    {
+        public static byte[] EncodeString(string str, int size)
+        {
+            byte[] bytes = new byte[size];
+            byte[] strBytes = Encoding.UTF8.GetBytes(str);
+            Array.Copy(strBytes, bytes, Math.Min(strBytes.Length, size));
+            return bytes;
+        }
+    }
     public class LdData
     {
-        public LdHead head;
-        public List<LdChan> channs;
-        public List<LdBeacon> beacons;
-        public LdLapInfo lapInfo;
+        private LdHead head;
+        private List<LdChan> channs;
+        private List<LdBeacon> beacons;
+        private LdLapInfo lapInfo;
 
         public LdData(LdHead head, List<LdChan> channs, List<LdBeacon> beacons, LdLapInfo lapInfo)
         {
@@ -34,7 +46,7 @@ namespace Aim_2_MoTeC
             List<uint> metaAddrs = channs.Select((channel, i) =>
                 {
                     int metaOffset = i * 124;
-                    return (uint)(PointerConstants.HEADER_PTR + metaOffset);
+                    return (uint)(HEADER_PTR + metaOffset);
                 }).ToList();
 
             List<int> sampleByteSizes = channs.Select((channel, _) =>
@@ -47,7 +59,7 @@ namespace Aim_2_MoTeC
                     int metaOffset = channs.Count * 124;
                     int sampleOffset = sampleByteSizes.Take(i).Sum();
 
-                    return (uint)(PointerConstants.HEADER_PTR + metaOffset + sampleOffset);
+                    return (uint)(HEADER_PTR + metaOffset + sampleOffset);
                 }).ToList();
 
 
@@ -63,7 +75,7 @@ namespace Aim_2_MoTeC
                 channel.meta_ptr = metaAddrs[i];
             }
 
-            PointerConstants.CHANNEL_DATA_PRT = sampleAddrs[0];
+            CHANNEL_DATA_PRT = sampleAddrs[0];
         }
         public void Write(string logFilename, string extensionFilename)
         {
@@ -111,12 +123,12 @@ namespace Aim_2_MoTeC
     }
     public class LdHead
     {
-        public string Driver;
-        public string VehicleId;
-        public string Venue;
-        public DateTimeStruct DateTime;
-        public string ShortComment;
-        public string Session;
+        private string Driver;
+        private string VehicleId;
+        private string Venue;
+        private DateTimeStruct DateTime;
+        private string ShortComment;
+        private string Session;
 
         public LdHead(string driver, string vehicleId, string venue, DateTimeStruct dateTime, string shortComment, string session)
         {
@@ -162,12 +174,12 @@ namespace Aim_2_MoTeC
 
             writer.Write((uint)0x00000000);
 
-            writer.Write(PointerConstants.CHANNEL_META_PRT);
-            writer.Write(PointerConstants.CHANNEL_DATA_PRT);
+            writer.Write(CHANNEL_META_PRT);
+            writer.Write(CHANNEL_DATA_PRT);
 
             writer.Write(new byte[20]);
 
-            writer.Write(PointerConstants.EVENT_PTR);
+            writer.Write(EVENT_PTR);
 
             writer.Write(new byte[24]);
 
@@ -213,23 +225,16 @@ namespace Aim_2_MoTeC
             writer.Write(sessionBytes);
             writer.Write(longCommentBytes);*/
 
-            writer.Seek((int)PointerConstants.EVENT_PTR, SeekOrigin.Begin);
-        }
-        public static byte[] EncodeString(string str, int size)
-        {
-            byte[] bytes = new byte[size];
-            byte[] strBytes = Encoding.UTF8.GetBytes(str);
-            Array.Copy(strBytes, bytes, Math.Min(strBytes.Length, size));
-            return bytes;
+            writer.Seek((int)EVENT_PTR, SeekOrigin.Begin);
         }
     }
     public class LdBeacon
     {
-        public int markerVersion;
-        public string className;
-        public string name;
-        public int flags;
-        public double time;
+        private int markerVersion;
+        private string className;
+        private string name;
+        private int flags;
+        private double time;
 
         public LdBeacon(int markerVersion, string className, string name, int flags, double time)
         {
@@ -249,9 +254,9 @@ namespace Aim_2_MoTeC
     }
     public class LdLapInfo
     {
-        public int totalLaps;
-        public double fastestTime;
-        public int fastestLap;
+        private int totalLaps;
+        private double fastestTime;
+        private int fastestLap;
         public LdLapInfo(int totalLaps, double fastestTime, int fastestLap)
         {
             this.totalLaps = totalLaps;
@@ -270,19 +275,19 @@ namespace Aim_2_MoTeC
     public class LdChan
     {
         public uint meta_ptr;
-
         public uint prev_meta_ptr;
         public uint next_meta_ptr;
         public uint data_ptr;
         public uint data_len;
-        public ushort freq;
-        public ushort shift;
-        public ushort mul;
-        public ushort scale;
-        public short dec;
-        public string name;
-        public string short_name;
-        public string unit;
+
+        private ushort freq;
+        private ushort shift;
+        private ushort mul;
+        private ushort scale;
+        private short dec;
+        private string name;
+        private string short_name;
+        private string unit;
 
         public float[] Data;
 
@@ -306,9 +311,9 @@ namespace Aim_2_MoTeC
 
             f.Seek((int)meta_ptr, SeekOrigin.Begin);
 
-            byte[] nameBytes = LdHead.EncodeString(name, 32);
-            byte[] shortNameBytes = LdHead.EncodeString(short_name, 8);
-            byte[] unitBytes = LdHead.EncodeString(unit, 12);
+            byte[] nameBytes = EncodeString(name, 32);
+            byte[] shortNameBytes = EncodeString(short_name, 8);
+            byte[] unitBytes = EncodeString(unit, 12);
 
             f.Write(prev_meta_ptr);
             f.Write(next_meta_ptr);

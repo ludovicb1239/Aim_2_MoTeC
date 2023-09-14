@@ -96,13 +96,15 @@ namespace Aim_2_MoTeC
 
                 DateTimeStruct dateTime = XRK.GetDateAndTime(id);
 
-                MotecLog motec_log = new();
-                motec_log.driver = XRK.GetRacerName(id);
-                motec_log.vehicle_id = XRK.GetVehiculeName(id);
-                motec_log.venue_name = XRK.GetTrackName(id);
-                motec_log.event_session = XRK.GetVenueTypeName(id);
-                motec_log.short_comment = XRK.GetChampionshipName(id);
-                motec_log.datetime = dateTime;
+                MotecLog motec_log = new()
+                {
+                    driver = XRK.GetRacerName(id),
+                    vehicle_id = XRK.GetVehiculeName(id),
+                    venue_name = XRK.GetTrackName(id),
+                    event_session = XRK.GetVenueTypeName(id),
+                    short_comment = XRK.GetChampionshipName(id),
+                    datetime = dateTime
+                };
 
                 XRK.CloseFile(path);
 

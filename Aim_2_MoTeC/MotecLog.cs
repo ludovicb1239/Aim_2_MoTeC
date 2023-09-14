@@ -24,6 +24,7 @@ namespace Aim_2_MoTeC
             driver = "";
             vehicle_id = "";
             venue_name = "";
+            event_session = "";
             short_comment = "";
             datetime = new DateTimeStruct();
 
