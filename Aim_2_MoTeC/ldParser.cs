@@ -17,7 +17,7 @@ namespace Aim_2_MoTeC
         public static uint CHANNEL_DATA_PRT;
         public const uint CHANNEL_HEADER_SIZE = 124;
     }
-    public static class Encoder
+    static class Encoder
     {
         public static byte[] EncodeString(string str, int size)
         {
@@ -43,26 +43,28 @@ namespace Aim_2_MoTeC
         }
         public void prepPointers()
         {
-            List<uint> metaAddrs = channs.Select((channel, i) =>
-                {
-                    int metaOffset = i * 124;
-                    return (uint)(HEADER_PTR + metaOffset);
-                }).ToList();
+            uint[] metaAddrs = new uint[channs.Count];
+            int[] sampleByteSizes = new int[channs.Count];
+            uint[] sampleAddrs = new uint[channs.Count];
 
-            List<int> sampleByteSizes = channs.Select((channel, _) =>
-                {
-                    return (channel.Data.Length * 4);
-                }).ToList();
+            int metaOffset = 0;
+            int fetaOffset = channs.Count * 124;
+            int sampleOffset = 0;
 
-            List<uint> sampleAddrs = channs.Select((channel, i) =>
-                {
-                    int metaOffset = channs.Count * 124;
-                    int sampleOffset = sampleByteSizes.Take(i).Sum();
+            //First pass calculates the addresses
+            for(int i = 0; i < channs.Count; i++)
+            {
+                LdChan channel = channs[i];
 
-                    return (uint)(HEADER_PTR + metaOffset + sampleOffset);
-                }).ToList();
+                metaAddrs[i] = (uint)(HEADER_PTR + metaOffset);
+                sampleByteSizes[i] = channel.Data.Length * 4;
+                sampleAddrs[i] = (uint)(HEADER_PTR + fetaOffset + sampleOffset);
 
+                metaOffset += 124;
+                sampleOffset += sampleByteSizes.Last();
+            }
 
+            //Second pass assigns those addresses to channels
             for (int i = 0; i < channs.Count; i++)
             {
                 LdChan channel = channs[i];

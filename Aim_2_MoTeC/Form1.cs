@@ -136,6 +136,9 @@ namespace Aim_2_MoTeC
             }
 
             e.Result = "Done! File saved in " + (outFilePath == "" ? "the same folder as the drk file" : outFilePath);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
         private void ConvertWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
