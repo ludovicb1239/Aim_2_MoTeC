@@ -58,5 +58,17 @@ namespace Aim_2_MoTeC.Properties {
                 this["S_UseRawGPS"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool S_UseDarkTheme {
+            get {
+                return ((bool)(this["S_UseDarkTheme"]));
+            }
+            set {
+                this["S_UseDarkTheme"] = value;
+            }
+        }
     }
 }

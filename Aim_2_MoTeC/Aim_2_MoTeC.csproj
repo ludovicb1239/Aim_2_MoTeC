@@ -6,8 +6,8 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>download.ico</ApplicationIcon>
     <Authors>Ludovic Bouchard</Authors>
-    <Description>Aim to MoTeC i2 converter made for developpement purposes</Description>
-    <Version>1.0.5</Version>
+    <Description>Aim to MoTeC i2 converter made for education purposes</Description>
+    <Version>1.0.7</Version>
     <Title>Aim To MoTeC</Title>
     <PackageProjectUrl>https://github.com/ludovicb1239/Aim_2_MoTeC</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>

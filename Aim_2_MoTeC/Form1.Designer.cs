@@ -46,10 +46,12 @@ namespace Aim_2_MoTeC
             BrowseOutputButton = new System.Windows.Forms.Button();
             PathOutputText = new System.Windows.Forms.TextBox();
             SubFolderCheckBox = new System.Windows.Forms.CheckBox();
+            ThemeCheckBox = new System.Windows.Forms.CheckBox();
             SuspendLayout();
             // 
             // PathInputText
             // 
+            PathInputText.BackColor = System.Drawing.Color.White;
             PathInputText.Location = new System.Drawing.Point(303, 74);
             PathInputText.Name = "PathInputText";
             PathInputText.PlaceholderText = "path input";
@@ -59,6 +61,10 @@ namespace Aim_2_MoTeC
             // 
             // BrowseInputButton
             // 
+            BrowseInputButton.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            BrowseInputButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Silver;
+            BrowseInputButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
+            BrowseInputButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             BrowseInputButton.Location = new System.Drawing.Point(146, 70);
             BrowseInputButton.Name = "BrowseInputButton";
             BrowseInputButton.Size = new System.Drawing.Size(141, 30);
@@ -70,6 +76,10 @@ namespace Aim_2_MoTeC
             // convertButton
             // 
             convertButton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            convertButton.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            convertButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Silver;
+            convertButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
+            convertButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             convertButton.Location = new System.Drawing.Point(292, 487);
             convertButton.Name = "convertButton";
             convertButton.Size = new System.Drawing.Size(200, 50);
@@ -100,6 +110,10 @@ namespace Aim_2_MoTeC
             // 
             // readButton
             // 
+            readButton.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            readButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Silver;
+            readButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
+            readButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             readButton.Location = new System.Drawing.Point(21, 178);
             readButton.Name = "readButton";
             readButton.Size = new System.Drawing.Size(200, 50);
@@ -111,6 +125,8 @@ namespace Aim_2_MoTeC
             // progressBar1
             // 
             progressBar1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            progressBar1.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            progressBar1.ForeColor = System.Drawing.Color.IndianRed;
             progressBar1.Location = new System.Drawing.Point(167, 452);
             progressBar1.Name = "progressBar1";
             progressBar1.Size = new System.Drawing.Size(450, 20);
@@ -124,12 +140,14 @@ namespace Aim_2_MoTeC
             // UseRawGPSCheckBox
             // 
             UseRawGPSCheckBox.AutoSize = true;
+            UseRawGPSCheckBox.BackColor = System.Drawing.Color.WhiteSmoke;
+            UseRawGPSCheckBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             UseRawGPSCheckBox.Location = new System.Drawing.Point(327, 415);
             UseRawGPSCheckBox.Name = "UseRawGPSCheckBox";
             UseRawGPSCheckBox.Size = new System.Drawing.Size(131, 21);
             UseRawGPSCheckBox.TabIndex = 7;
             UseRawGPSCheckBox.Text = "Use raw GPS data";
-            UseRawGPSCheckBox.UseVisualStyleBackColor = true;
+            UseRawGPSCheckBox.UseVisualStyleBackColor = false;
             // 
             // versionLabel
             // 
@@ -152,24 +170,31 @@ namespace Aim_2_MoTeC
             // RenameChannelsCheckBox
             // 
             RenameChannelsCheckBox.AutoSize = true;
+            RenameChannelsCheckBox.BackColor = System.Drawing.Color.WhiteSmoke;
             RenameChannelsCheckBox.Location = new System.Drawing.Point(327, 388);
             RenameChannelsCheckBox.Name = "RenameChannelsCheckBox";
             RenameChannelsCheckBox.Size = new System.Drawing.Size(128, 21);
             RenameChannelsCheckBox.TabIndex = 12;
             RenameChannelsCheckBox.Text = "Rename channels";
-            RenameChannelsCheckBox.UseVisualStyleBackColor = true;
+            RenameChannelsCheckBox.UseVisualStyleBackColor = false;
             // 
             // listBox1
             // 
+            listBox1.BackColor = System.Drawing.Color.White;
+            listBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             listBox1.FormattingEnabled = true;
             listBox1.ItemHeight = 17;
             listBox1.Location = new System.Drawing.Point(303, 198);
             listBox1.Name = "listBox1";
-            listBox1.Size = new System.Drawing.Size(455, 174);
+            listBox1.Size = new System.Drawing.Size(455, 172);
             listBox1.TabIndex = 13;
             // 
             // BrowseOutputButton
             // 
+            BrowseOutputButton.FlatAppearance.BorderColor = System.Drawing.Color.Gray;
+            BrowseOutputButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Silver;
+            BrowseOutputButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Gainsboro;
+            BrowseOutputButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             BrowseOutputButton.Location = new System.Drawing.Point(146, 112);
             BrowseOutputButton.Name = "BrowseOutputButton";
             BrowseOutputButton.Size = new System.Drawing.Size(141, 30);
@@ -180,6 +205,7 @@ namespace Aim_2_MoTeC
             // 
             // PathOutputText
             // 
+            PathOutputText.BackColor = System.Drawing.Color.White;
             PathOutputText.Location = new System.Drawing.Point(303, 116);
             PathOutputText.Name = "PathOutputText";
             PathOutputText.PlaceholderText = "path output (optionnal)";
@@ -190,19 +216,37 @@ namespace Aim_2_MoTeC
             // SubFolderCheckBox
             // 
             SubFolderCheckBox.AutoSize = true;
+            SubFolderCheckBox.BackColor = System.Drawing.Color.WhiteSmoke;
             SubFolderCheckBox.Location = new System.Drawing.Point(41, 74);
             SubFolderCheckBox.Name = "SubFolderCheckBox";
             SubFolderCheckBox.Size = new System.Drawing.Size(88, 21);
             SubFolderCheckBox.TabIndex = 16;
             SubFolderCheckBox.Text = "sub-folder";
-            SubFolderCheckBox.UseVisualStyleBackColor = true;
+            SubFolderCheckBox.UseVisualStyleBackColor = false;
             SubFolderCheckBox.CheckedChanged += SubFolderCheckBox_CheckedChanged;
+            // 
+            // ThemeCheckBox
+            // 
+            ThemeCheckBox.Appearance = System.Windows.Forms.Appearance.Button;
+            ThemeCheckBox.AutoSize = true;
+            ThemeCheckBox.BackColor = System.Drawing.Color.WhiteSmoke;
+            ThemeCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            ThemeCheckBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            ThemeCheckBox.Location = new System.Drawing.Point(688, 525);
+            ThemeCheckBox.Name = "ThemeCheckBox";
+            ThemeCheckBox.Size = new System.Drawing.Size(84, 27);
+            ThemeCheckBox.TabIndex = 17;
+            ThemeCheckBox.Text = "DarkTheme";
+            ThemeCheckBox.UseVisualStyleBackColor = false;
+            ThemeCheckBox.CheckedChanged += ThemeCheckBox_CheckedChanged;
             // 
             // Form1
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            BackColor = System.Drawing.SystemColors.Control;
             ClientSize = new System.Drawing.Size(784, 561);
+            Controls.Add(ThemeCheckBox);
             Controls.Add(SubFolderCheckBox);
             Controls.Add(BrowseOutputButton);
             Controls.Add(PathOutputText);
@@ -219,7 +263,8 @@ namespace Aim_2_MoTeC
             Controls.Add(BrowseInputButton);
             Controls.Add(PathInputText);
             Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            ForeColor = System.Drawing.SystemColors.ControlText;
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
             Name = "Form1";
             StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -246,6 +291,7 @@ namespace Aim_2_MoTeC
         private System.Windows.Forms.Button BrowseOutputButton;
         private System.Windows.Forms.TextBox PathOutputText;
         private System.Windows.Forms.CheckBox SubFolderCheckBox;
+        private System.Windows.Forms.CheckBox ThemeCheckBox;
     }
 }
 
