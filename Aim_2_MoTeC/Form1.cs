@@ -117,7 +117,7 @@ namespace Aim_2_MoTeC
             bool usingRAW_GPS = UseRawGPSCheckBox.Checked, convertName = RenameChannelsCheckBox.Checked;
 
             foreach (string path in filePaths)
-                Converter.Convert(path, usingRAW_GPS, convertName, (BackgroundWorker)sender);
+                Converter.Convert(path, outFilePath, usingRAW_GPS, convertName, (BackgroundWorker)sender);
 
             e.Result = "Done! File saved in " + (outFilePath == "" ? "the same folder as the drk file" : outFilePath);
 

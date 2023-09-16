@@ -24,12 +24,12 @@ namespace Aim_2_MoTeC
         /// <param name="convertName">A boolean indicating whether to convert channel names during conversion.</param>
         /// <param name="worker">A BackgroundWorker object for progress reporting.</param>
         /// <exception cref="Exception">Thrown when certain operations, such as ID retrieval or channel discovery, fail.</exception>
-        public static void Convert(string path, bool usingRAW_GPS, bool convertName, BackgroundWorker worker)
+        public static void Convert(string inPath, string outPath, bool usingRAW_GPS, bool convertName, BackgroundWorker worker)
         {
 
-            Console.WriteLine("Converting " + path);
+            Console.WriteLine("Converting " + inPath);
 
-            if (!getID(path, out int id)) throw new Exception("Failed to get ID using dll");
+            if (!getID(inPath, out int id)) throw new Exception("Failed to get ID using dll");
 
 
             ChannelNamesConvert nameConverter = new();
@@ -51,7 +51,7 @@ namespace Aim_2_MoTeC
                 datetime = dateTime
             };
 
-            CloseFile(path);
+            CloseFile(inPath);
 
             motec_log.Initialize();
             motec_log.AddDataLog(data_log);
@@ -66,7 +66,7 @@ namespace Aim_2_MoTeC
             int second = dateTime.tm_sec;
 
             Console.WriteLine("Saving MoTeC log...");
-            string directoryPath = path == "" ? Path.GetDirectoryName(path) : path;
+            string directoryPath = outPath == "" ? Path.GetDirectoryName(inPath) : outPath;
             string newFileName = string.Format("{0}{1:D2}{2:D2}-{3:D2}{4:D2}{5:D2}.ld", year, month, day, hour, minute, second);
             string newFileNameExtra = string.Format("{0}{1:D2}{2:D2}-{3:D2}{4:D2}{5:D2}.ldx", year, month, day, hour, minute, second);
             string newFilePath = Path.Combine(directoryPath, newFileName);
@@ -83,7 +83,7 @@ namespace Aim_2_MoTeC
             motec_log.Write(newFilePath, newFilePathExtra);
             data_log.Clear();
 
-            Console.WriteLine("Done working on " + path);
+            Console.WriteLine("Done working on " + inPath);
         }
         /// <summary>
         /// Reads and retrieves information from a data log file and provides the data and channel names.
