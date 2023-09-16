@@ -18,9 +18,9 @@ namespace Aim_2_MoTeC
         {
             InitializeComponent();
             updateButtons();
-            convertWorker.ProgressChanged += ConvertWorker_ProgressChanged;
+            convertWorker.ProgressChanged    += ConvertWorker_ProgressChanged;
             convertWorker.RunWorkerCompleted += ConvertWorker_RunWorkerCompleted;
-            Application.ApplicationExit += OnApplicationExit;
+            Application.ApplicationExit      += OnApplicationExit;
 
             // Get the assembly information of the current application
             Assembly assembly = Assembly.GetExecutingAssembly();
@@ -29,12 +29,12 @@ namespace Aim_2_MoTeC
             versionLabel.Text = "V" + fileVersionInfo.ProductVersion;
 
             // Load the previously saved boolean value from settings
-            SubFolderCheckBox.Checked = Properties.Settings.Default.S_UseSubSearch;
-            folderMode = Properties.Settings.Default.S_UseSubSearch;
+            SubFolderCheckBox.Checked      = Properties.Settings.Default.S_UseSubSearch;
+            folderMode                     = Properties.Settings.Default.S_UseSubSearch;
             RenameChannelsCheckBox.Checked = Properties.Settings.Default.S_RenameChannels;
-            UseRawGPSCheckBox.Checked = Properties.Settings.Default.S_UseRawGPS;
-            usesDarkTheme = Properties.Settings.Default.S_UseDarkTheme;
-            ThemeCheckBox.Checked = Properties.Settings.Default.S_UseDarkTheme;
+            UseRawGPSCheckBox.Checked      = Properties.Settings.Default.S_UseRawGPS;
+            usesDarkTheme                  = Properties.Settings.Default.S_UseDarkTheme;
+            ThemeCheckBox.Checked          = Properties.Settings.Default.S_UseDarkTheme;
 
             CreateCustomTitleBar();
             UpdateTheme();
@@ -85,79 +85,13 @@ namespace Aim_2_MoTeC
         private void ConvertWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             Console.WriteLine("Worker started conversion");
-            BackgroundWorker worker = (BackgroundWorker)sender;
 
-            List<string> filePaths = new();
+            List<string> filePaths = Converter.getFileList(inFilePath, folderMode);
 
-            if (folderMode)
-                SearchForDrkFiles(inFilePath, filePaths); //Get the list of all of the DRK files
-            else
-                filePaths.Add(inFilePath); //Only add to the list the selected DRK file
-
-            ChannelNamesConvert nameConverter = new ChannelNamesConvert();
+            bool usingRAW_GPS = UseRawGPSCheckBox.Checked, convertName = RenameChannelsCheckBox.Checked;
 
             foreach (string path in filePaths)
-            {
-                Console.WriteLine("Converting " + path);
-
-                if (!XRK.getID(path, out int id)) throw new Exception("Failed to get ID using dll");
-
-                bool usingRAW_GPS = UseRawGPSCheckBox.Checked;
-                bool convertName = RenameChannelsCheckBox.Checked;
-
-                DataLog data_log = new();
-                data_log.nameConverter = nameConverter;
-                data_log.fromXRK(id, worker, usingRAW_GPS, convertName);
-
-                if (data_log.channels.Count == 0) throw new Exception("Failed to find any channels in log data");
-
-                DateTimeStruct dateTime = XRK.GetDateAndTime(id);
-
-                MotecLog motec_log = new()
-                {
-                    driver = XRK.GetRacerName(id),
-                    vehicle_id = XRK.GetVehiculeName(id),
-                    venue_name = XRK.GetTrackName(id),
-                    event_session = XRK.GetVenueTypeName(id),
-                    short_comment = XRK.GetChampionshipName(id),
-                    datetime = dateTime
-                };
-
-                XRK.CloseFile(path);
-
-                motec_log.Initialize();
-                motec_log.AddDataLog(data_log);
-
-                Console.WriteLine("Done adding data log");
-
-                int year = dateTime.tm_year + 1900;
-                int month = dateTime.tm_mon + 1;
-                int day = dateTime.tm_mday;
-                int hour = dateTime.tm_hour;
-                int minute = dateTime.tm_min;
-                int second = dateTime.tm_sec;
-
-                Console.WriteLine("Saving MoTeC log...");
-                string directoryPath = outFilePath == "" ? Path.GetDirectoryName(path) : outFilePath;
-                string newFileName = string.Format("{0}{1:D2}{2:D2}-{3:D2}{4:D2}{5:D2}.ld", year, month, day, hour, minute, second);
-                string newFileNameExtra = string.Format("{0}{1:D2}{2:D2}-{3:D2}{4:D2}{5:D2}.ldx", year, month, day, hour, minute, second);
-                string newFilePath = Path.Combine(directoryPath, newFileName);
-                string newFilePathExtra = Path.Combine(directoryPath, newFileNameExtra);
-
-                if (!string.IsNullOrEmpty(directoryPath) && !Directory.Exists(directoryPath))
-                {
-                    Console.WriteLine("Directory '{0}' does not exist, will create it", directoryPath);
-                    Directory.CreateDirectory(directoryPath);
-                }
-
-                Console.WriteLine("Output path " + newFilePath);
-
-                motec_log.Write(newFilePath, newFilePathExtra);
-                data_log.Clear();
-
-
-                Console.WriteLine("Done working on " + path);
-            }
+                Converter.Convert(path, usingRAW_GPS, convertName, (BackgroundWorker)sender);
 
             e.Result = "Done! File saved in " + (outFilePath == "" ? "the same folder as the drk file" : outFilePath);
 
@@ -197,66 +131,16 @@ namespace Aim_2_MoTeC
             DataLabel.Text = "Reading Data...";
             DataLabel.Refresh();
 
-            List<string> filePaths = new();
+            List<string> filePaths = Converter.getFileList(inFilePath, folderMode);
 
-            if (folderMode)
-                SearchForDrkFiles(inFilePath, filePaths);
-            else
-                filePaths.Add(inFilePath);
+            List<string> data, names;
+            Converter.Read(filePaths[0], UseRawGPSCheckBox.Checked, out data, out names);
 
-            if (!XRK.getID(filePaths[0], out int id)) return;
-
-            List<string> info = new()
-            {
-                "Vehicule name:     " + XRK.GetVehiculeName(id),
-                "Track name:        " + XRK.GetTrackName(id),
-                "Racer name:        " + XRK.GetRacerName(id),
-                "Championship name: " + XRK.GetChampionshipName(id),
-                "Venue type name:   " + XRK.GetVenueTypeName(id)
-            };
-
-            DateTimeStruct dateTime = XRK.GetDateAndTime(id);
-
-            int year = dateTime.tm_year + 1900;
-            int month = dateTime.tm_mon + 1;
-            int day = dateTime.tm_mday;
-            int hour = dateTime.tm_hour;
-            int minute = dateTime.tm_min;
-            int second = dateTime.tm_sec;
-            info.Add(string.Format("Date:              {0}-{1:D2}-{2:D2}", year, month, day));
-            info.Add(string.Format("Time:              {0:D2}:{1:D2}:{2:D2}", hour, minute, second));
-
-            int lapsCount = XRK.GetLapsCount(id);
-            info.Add("Laps count:        " + lapsCount);
-
-
-            DataLabel.Text = string.Join("\n", info.ToArray());
-
-
-            ChannelNamesConvert nameConverter = new ChannelNamesConvert();
+            DataLabel.Text = string.Join("\n", data);
 
             listBox1.Items.Clear();
-            int channelCount = XRK.GetChannelsCount(id);
-            listBox1.Items.Add("-- From --" + new string('\t', 2) + "-- Rename --");
-            for (int c = 0; c < channelCount; c++)
-            {
-                string name = XRK.GetChannelName(id, c);
-                if (nameConverter.containsName(name, out nameConvert convert))
-                    listBox1.Items.Add(name + new string('\t', 4 - ((name.Length + 1) / 4)) + "--> " + convert.to);
-                else
-                    listBox1.Items.Add(name);
-            }
-            int gpsChannelCount = UseRawGPSCheckBox.Checked ? XRK.GetGPSRawChannelsCount(id) : XRK.GetGPSChannelsCount(id);
-            listBox1.Items.Add("-- GPS --" + new string('\t', 3) + "-- Rename --");
-            for (int c = 0; c < gpsChannelCount; c++)
-            {
-                string name = UseRawGPSCheckBox.Checked ? XRK.GetGPSRawChannelName(id, c) : XRK.GetGPSChannelName(id, c);
-                if (nameConverter.containsName(name, out nameConvert convert))
-                    listBox1.Items.Add(name + new string('\t', 4 - ((name.Length + 1) / 4)) + "--> " + convert.to);
-                else
-                    listBox1.Items.Add(name);
-            }
-            XRK.CloseFile(filePaths[0]);
+            foreach (string str in names)
+                listBox1.Items.Add(str);
             listBox1.Refresh();
         }
 
@@ -300,24 +184,6 @@ namespace Aim_2_MoTeC
             Properties.Settings.Default.S_UseRawGPS = UseRawGPSCheckBox.Checked;
             Properties.Settings.Default.S_UseDarkTheme = usesDarkTheme;
             Properties.Settings.Default.Save();
-        }
-        static void SearchForDrkFiles(string directoryPath, List<string> paths)
-        {
-            try
-            {
-                // Search for .drk files in the current directory
-                paths.AddRange(Directory.GetFiles(directoryPath, "*.drk"));
-
-                // Recursively search subdirectories
-                string[] subdirectories = Directory.GetDirectories(directoryPath);
-
-                foreach (string subdirectory in subdirectories)
-                    SearchForDrkFiles(subdirectory, paths);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
         }
         protected override void OnPaint(PaintEventArgs e)
         {
