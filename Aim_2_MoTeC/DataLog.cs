@@ -29,6 +29,13 @@ namespace Aim_2_MoTeC
         {
             channels[name] = new Channel(name, units, freq, short_name);
         }
+        /// <summary>
+        /// Populates this object with data extracted from an XRK file.
+        /// </summary>
+        /// <param name="id">The identifier of the XRK file to extract data from.</param>
+        /// <param name="sender">A BackgroundWorker object for progress reporting.</param>
+        /// <param name="useRawGPS">A boolean indicating whether to use raw GPS data.</param>
+        /// <param name="convertName">A boolean indicating whether to convert channel names using the nameConverter.</param>
         public void fromXRK(int id, BackgroundWorker sender, bool useRawGPS = false, bool convertName = false)
         {
             Clear();

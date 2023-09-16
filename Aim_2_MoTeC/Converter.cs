@@ -16,6 +16,14 @@ namespace Aim_2_MoTeC
     using static XRK;
     public static class Converter
     {
+        /// <summary>
+        /// Converts a data log file from AIM to MOTEC
+        /// </summary>
+        /// <param name="path">The path to the input data log file.</param>
+        /// <param name="usingRAW_GPS">A boolean indicating whether to use Raw GPS data during conversion.</param>
+        /// <param name="convertName">A boolean indicating whether to convert channel names during conversion.</param>
+        /// <param name="worker">A BackgroundWorker object for progress reporting.</param>
+        /// <exception cref="Exception">Thrown when certain operations, such as ID retrieval or channel discovery, fail.</exception>
         public static void Convert(string path, bool usingRAW_GPS, bool convertName, BackgroundWorker worker)
         {
 
@@ -77,6 +85,14 @@ namespace Aim_2_MoTeC
 
             Console.WriteLine("Done working on " + path);
         }
+        /// <summary>
+        /// Reads and retrieves information from a data log file and provides the data and channel names.
+        /// </summary>
+        /// <param name="filePath">The path to the input data log file.</param>
+        /// <param name="useRawGPS">A boolean indicating whether to use Raw GPS data for channel names.</param>
+        /// <param name="data">A list of strings containing the retrieved data information.</param>
+        /// <param name="names">A list of strings containing the channel names with optional renaming.</param>
+        /// <exception cref="Exception">Thrown when certain operations, such as ID retrieval, fail.</exception>
         public static void Read(string filePath, bool useRawGPS, out List<string> data, out List<string> names)
         {
             data = new List<string>();
@@ -131,6 +147,12 @@ namespace Aim_2_MoTeC
             }
             CloseFile(filePath);
         }
+        /// <summary>
+        /// Recursively searches for DRK (data log) files in a specified directory and its subdirectories.
+        /// Adds the file paths of found DRK files to the provided list.
+        /// </summary>
+        /// <param name="directoryPath">The path of the directory to start the search from.</param>
+        /// <param name="paths">A list of strings to which the found DRK file paths will be added.</param>
         private static void SearchForDrkFiles(string directoryPath, List<string> paths)
         {
             try
@@ -149,6 +171,14 @@ namespace Aim_2_MoTeC
                 Console.WriteLine("Error: " + ex.Message);
             }
         }
+        /// <summary>
+        /// Retrieves a list of file paths based on the specified input path and folder mode.
+        /// </summary>
+        /// <param name="path">The input path, which can be a directory or a single file path.</param>
+        /// <param name="folderMode">
+        /// A boolean indicating whether to operate in folder mode, where all DRK files within a directory and its subdirectories are retrieved.
+        /// </param>
+        /// <returns>A list of file paths, including DRK files, based on the input path and mode.</returns>
         public static List<string> getFileList(string path, bool folderMode)
         {
             List<string> filePaths = new();

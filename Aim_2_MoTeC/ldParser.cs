@@ -19,6 +19,13 @@ namespace Aim_2_MoTeC
     }
     static class Encoder
     {
+        /// <summary>
+        /// Encodes a string as UTF-8 and returns a byte array of a specified size,
+        /// containing the encoded string truncated or padded as needed.
+        /// </summary>
+        /// <param name="str">The input string to encode.</param>
+        /// <param name="size">The desired size of the resulting byte array.</param>
+        /// <returns>A byte array containing the UTF-8 encoded string with the specified size.</returns>
         public static byte[] EncodeString(string str, int size)
         {
             byte[] bytes = new byte[size];
@@ -41,6 +48,11 @@ namespace Aim_2_MoTeC
             this.beacons = beacons;
             this.lapInfo = lapInfo;
         }
+        /// <summary>
+        /// Prepares memory pointers and addresses for a list of LdChan channels.
+        /// Calculates metadata and sample data addresses and sizes, assigns them to channels,
+        /// and sets the channel data pointer for the first channel.
+        /// </summary>
         public void prepPointers()
         {
             uint[] metaAddrs = new uint[channs.Count];
@@ -79,6 +91,11 @@ namespace Aim_2_MoTeC
 
             CHANNEL_DATA_PRT = sampleAddrs[0];
         }
+        /// <summary>
+        /// Writes the content of this MoTeC log object to a binary log file and an associated extension XML file.
+        /// </summary>
+        /// <param name="logFilename">The filename for the binary log file (e.g., .ld).</param>
+        /// <param name="extensionFilename">The filename for the associated extension XML file (e.g., .ldx).</param>
         public void Write(string logFilename, string extensionFilename)
         {
             try

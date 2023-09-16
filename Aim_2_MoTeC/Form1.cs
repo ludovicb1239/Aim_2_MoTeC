@@ -14,6 +14,11 @@ namespace Aim_2_MoTeC
         private string inFilePath = "", outFilePath = "";
         private bool folderMode = false;
         private bool usesDarkTheme = true;
+        /// <summary>
+        /// Constructor for Form1, the main form of the application.
+        /// Initializes the form and sets up event handlers. Also, retrieves and displays
+        /// the application's version information, loads saved settings, and creates a custom title bar.
+        /// </summary>
         public Form1()
         {
             InitializeComponent();
@@ -39,7 +44,11 @@ namespace Aim_2_MoTeC
             CreateCustomTitleBar();
             UpdateTheme();
         }
-
+        /// <summary>
+        /// Event handler for the "Browse" button click event.
+        /// Opens a file dialog or folder browser dialog based on the selected mode (folder or file).
+        /// Updates the 'inFilePath' variable and the 'PathInputText' control accordingly.
+        /// </summary>
         private void BrowseInputButton_Click(object sender, EventArgs e)
         {
             if (folderMode)
@@ -65,6 +74,11 @@ namespace Aim_2_MoTeC
                 }
             }
         }
+        /// <summary>
+        /// Event handler for the "Browse Output" button click event.
+        /// Opens a folder browser dialog to select an output directory and updates
+        /// the 'outFilePath' variable and the 'PathOutputText' control with the selected path.
+        /// </summary>
         private void BrowseOutputButton_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog folderBrowserDialog = new();
@@ -75,13 +89,23 @@ namespace Aim_2_MoTeC
                 PathOutputText.Text = outFilePath;
             }
         }
-
+        /// <summary>
+        /// Event handler for the "Convert" button click event.
+        /// Initiates the background worker to perform conversion tasks asynchronously.
+        /// Updates the state of buttons using the 'updateButtons' method.
+        /// </summary>
         private void ConvertButton_Click(object sender, EventArgs e)
         {
             // Start the worker to make it work in background
             convertWorker.RunWorkerAsync();
             updateButtons();
         }
+        /// <summary>
+        /// Event handler for the background worker's "DoWork" event.
+        /// Initiates the conversion process in the background, using parameters such as
+        /// the input file path, conversion options, and the background worker itself
+        /// for progress reporting.
+        /// </summary>
         private void ConvertWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             Console.WriteLine("Worker started conversion");
@@ -98,12 +122,21 @@ namespace Aim_2_MoTeC
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
+        /// <summary>
+        /// Event handler for the background worker's "ProgressChanged" event.
+        /// Updates the progress of the conversion process and the associated progress bar control.
+        /// </summary>
         private void ConvertWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             Console.WriteLine("Conversion progress: " + e.ProgressPercentage + "%");
 
             progressBar1.Value = e.ProgressPercentage;
         }
+        /// <summary>
+        /// Event handler for the background worker's "RunWorkerCompleted" event.
+        /// Performs cleanup, updates the state of buttons, and displays a message box
+        /// with the outcome of the conversion process (success, error, or cancellation).
+        /// </summary>
         private void ConvertWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             convertWorker.Dispose();
@@ -125,7 +158,11 @@ namespace Aim_2_MoTeC
                 MessageBox.Show("Conversion result: " + e.Result.ToString(), "Conversion result", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
-
+        /// <summary>
+        /// Event handler for the "Read" button click event.
+        /// Initiates the process of reading data from a file or folder.
+        /// Displays a "Reading Data..." message, reads data, and updates UI controls with the result.
+        /// </summary>
         private void readButton_Click(object sender, EventArgs e)
         {
             DataLabel.Text = "Reading Data...";
@@ -143,7 +180,10 @@ namespace Aim_2_MoTeC
                 listBox1.Items.Add(str);
             listBox1.Refresh();
         }
-
+        /// <summary>
+        /// Updates the state (enabled or disabled) of certain buttons based on the current
+        /// status of the input file path and the background worker.
+        /// </summary>
         private void updateButtons()
         {
             bool pathOk = checkIfInputPathOK(inFilePath);
@@ -175,7 +215,10 @@ namespace Aim_2_MoTeC
         {
             outFilePath = PathOutputText.Text;
         }
-
+        /// <summary>
+        /// Event handler for the application's exit event.
+        /// Saves user-specific settings
+        /// </summary>
         private void OnApplicationExit(object sender, EventArgs e)
         {
             // Save any changes made by the user back to settings
@@ -213,7 +256,6 @@ namespace Aim_2_MoTeC
             isDragging = true;
             startPoint = new Point(e.X, e.Y);
         }
-
         private void customTitleBar_MouseMove(object sender, MouseEventArgs e)
         {
             if (isDragging)
@@ -222,7 +264,6 @@ namespace Aim_2_MoTeC
                 Location = new Point(endPoint.X - startPoint.X, endPoint.Y - startPoint.Y);
             }
         }
-
         private void customTitleBar_MouseUp(object sender, MouseEventArgs e)
         {
             isDragging = false;
