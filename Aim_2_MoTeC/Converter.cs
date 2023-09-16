@@ -32,7 +32,7 @@ namespace Aim_2_MoTeC
             if (!getID(path, out int id)) throw new Exception("Failed to get ID using dll");
 
 
-            ChannelNamesConvert nameConverter = new ChannelNamesConvert();
+            ChannelNamesConvert nameConverter = new();
             DataLog data_log = new();
             data_log.nameConverter = nameConverter;
             data_log.fromXRK(id, worker, usingRAW_GPS, convertName);
@@ -123,7 +123,7 @@ namespace Aim_2_MoTeC
             int lapsCount = GetLapsCount(id);
             data.Add("Laps count:        " + lapsCount);
 
-            ChannelNamesConvert nameConverter = new ChannelNamesConvert();
+            ChannelNamesConvert nameConverter = new();
 
             int channelCount = GetChannelsCount(id);
             names.Add("-- From --" + new string('\t', 2) + "-- Rename --");

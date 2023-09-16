@@ -164,10 +164,7 @@ namespace Aim_2_MoTeC
             const int MaxStringSize = 64;
             const int MaxCommentSize = 1024;
 
-            foreach (char value in FULL_HEADER.const_data)
-            {
-                writer.Write(value);
-            }
+            writer.Write(FULL_HEADER.const_data);
             writer.Seek(0, SeekOrigin.Begin);
 
             int year = DateTime.tm_year + 1900;

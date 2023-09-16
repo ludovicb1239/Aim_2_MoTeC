@@ -36,7 +36,7 @@ namespace Aim_2_MoTeC
         /// </returns>
         private static nameConvert[] ParseTextFile(string filePath)
         {
-            List<nameConvert> mappings = new List<nameConvert>();
+            List<nameConvert> mappings = new();
 
             try
             {

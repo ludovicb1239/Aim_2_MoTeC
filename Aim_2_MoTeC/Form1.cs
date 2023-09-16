@@ -63,9 +63,11 @@ namespace Aim_2_MoTeC
             }
             else
             {
-                OpenFileDialog openFileDialog = new();
-                openFileDialog.Filter = "DRK Files (*.drk)|*.drk";
-                openFileDialog.Title = "Select a DRK File";
+                OpenFileDialog openFileDialog = new()
+                {
+                    Filter = "DRK Files (*.drk)|*.drk",
+                    Title = "Select a DRK File"
+                };
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -170,8 +172,7 @@ namespace Aim_2_MoTeC
 
             List<string> filePaths = Converter.getFileList(inFilePath, folderMode);
 
-            List<string> data, names;
-            Converter.Read(filePaths[0], UseRawGPSCheckBox.Checked, out data, out names);
+            Converter.Read(filePaths[0], UseRawGPSCheckBox.Checked, out List<string> data, out List<string> names);
 
             DataLabel.Text = string.Join("\n", data);
 
@@ -234,7 +235,7 @@ namespace Aim_2_MoTeC
         }
         private void CreateCustomTitleBar()
         {
-            Panel customTitleBar = new Panel
+            Panel customTitleBar = new()
             {
                 Dock = DockStyle.Top,
                 Height = 30, // Adjust the height as needed
