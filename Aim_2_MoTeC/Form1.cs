@@ -160,7 +160,7 @@ namespace Aim_2_MoTeC
         }
         /// <summary>
         /// Event handler for the "Read" button click event.
-        /// Initiates the process of reading data from a file or folder.
+        /// Initiates the process of reading data from a file or first file of folder.
         /// Displays a "Reading Data..." message, reads data, and updates UI controls with the result.
         /// </summary>
         private void readButton_Click(object sender, EventArgs e)
