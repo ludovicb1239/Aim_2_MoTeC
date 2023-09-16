@@ -6,6 +6,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Drawing;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Aim_2_MoTeC
 {
@@ -22,6 +23,8 @@ namespace Aim_2_MoTeC
         public Form1()
         {
             InitializeComponent();
+            CreateCustomTitleBar();
+            InitializeCloseButton();
             updateButtons();
             convertWorker.ProgressChanged    += ConvertWorker_ProgressChanged;
             convertWorker.RunWorkerCompleted += ConvertWorker_RunWorkerCompleted;
@@ -41,7 +44,6 @@ namespace Aim_2_MoTeC
             usesDarkTheme                  = Properties.Settings.Default.S_UseDarkTheme;
             ThemeCheckBox.Checked          = Properties.Settings.Default.S_UseDarkTheme;
 
-            CreateCustomTitleBar();
             UpdateTheme();
         }
         /// <summary>
@@ -169,6 +171,7 @@ namespace Aim_2_MoTeC
         {
             DataLabel.Text = "Reading Data...";
             DataLabel.Refresh();
+            listBox1.Items.Clear();
 
             List<string> filePaths = Converter.getFileList(inFilePath, folderMode);
 
@@ -176,7 +179,6 @@ namespace Aim_2_MoTeC
 
             DataLabel.Text = string.Join("\n", data);
 
-            listBox1.Items.Clear();
             foreach (string str in names)
                 listBox1.Items.Add(str);
             listBox1.Refresh();
@@ -268,6 +270,33 @@ namespace Aim_2_MoTeC
         private void customTitleBar_MouseUp(object sender, MouseEventArgs e)
         {
             isDragging = false;
+        }
+
+        private void InitializeCloseButton()
+        {
+            Label closeButton;
+            // Create a Label control for the close button
+            closeButton = new Label();
+            closeButton.Text = "x";
+            closeButton.Font = new Font("Arial", 14F, FontStyle.Regular);
+            closeButton.BackColor = Color.Transparent;
+            closeButton.AutoSize = true;
+            closeButton.Cursor = Cursors.Hand;
+            closeButton.Location = new Point(this.Width - 25, 2);
+
+            // Attach a click event handler to the close button
+            closeButton.Click += CloseButton_Click;
+
+            // Add the close button to the form's Controls collection
+            this.Controls.Add(closeButton);
+            // Bring the close button to the front of the Z-order
+            closeButton.BringToFront();
+        }
+
+        private void CloseButton_Click(object sender, EventArgs e)
+        {
+            // Close the form when the close button is clicked
+            this.Close();
         }
 
         private void ThemeCheckBox_CheckedChanged(object sender, EventArgs e)
