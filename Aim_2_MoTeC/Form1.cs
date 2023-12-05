@@ -67,8 +67,8 @@ namespace Aim_2_MoTeC
             {
                 OpenFileDialog openFileDialog = new()
                 {
-                    Filter = "DRK Files (*.drk)|*.drk",
-                    Title = "Select a DRK File"
+                    Filter = "DRK Files (*.drk)|*.drk|XRK Files (*.xrk)|*.xrk",
+                    Title = "Select a DRK or XRK File"
                 };
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -196,7 +196,7 @@ namespace Aim_2_MoTeC
         private bool checkIfInputPathOK(string input)
         {
             if (input == "") return false;
-            if (!folderMode) return Path.GetExtension(input).ToLower() == ".drk";
+            if (!folderMode) return Path.GetExtension(input).ToLower() == ".drk" || Path.GetExtension(input).ToLower() == ".xrk";
             else return true;
         }
 

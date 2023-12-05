@@ -1,4 +1,4 @@
-# FROM, TO, TO_SHORT [optionnal]
+# FROM, TO, TO_SHORT
 "ASteering", "Steered Angle", "Str Ang"
 "Brake", "Brake Pos", "Brk Pos"
 "SpeedVeh", "Ground Speed", "Gnd Spd"

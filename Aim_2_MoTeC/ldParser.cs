@@ -73,7 +73,7 @@ namespace Aim_2_MoTeC
                 sampleAddrs[i] = (uint)(HEADER_PTR + fetaOffset + sampleOffset);
 
                 metaOffset += 124;
-                sampleOffset += sampleByteSizes.Last();
+                sampleOffset += sampleByteSizes[i];
             }
 
             //Second pass assigns those addresses to channels

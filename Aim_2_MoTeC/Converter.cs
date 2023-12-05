@@ -10,6 +10,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Data;
+using System.Threading.Channels;
 
 namespace Aim_2_MoTeC
 {
@@ -55,6 +56,7 @@ namespace Aim_2_MoTeC
 
             motec_log.Initialize();
             motec_log.AddDataLog(data_log);
+
 
             Console.WriteLine("Done adding data log");
 
@@ -159,6 +161,7 @@ namespace Aim_2_MoTeC
             {
                 // Search for .drk files in the current directory
                 paths.AddRange(Directory.GetFiles(directoryPath, "*.drk"));
+                paths.AddRange(Directory.GetFiles(directoryPath, "*.xrk"));
 
                 // Recursively search subdirectories
                 string[] subdirectories = Directory.GetDirectories(directoryPath);

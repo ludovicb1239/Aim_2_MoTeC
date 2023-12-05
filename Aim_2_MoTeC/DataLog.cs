@@ -130,7 +130,6 @@ namespace Aim_2_MoTeC
                     sender.ReportProgress((int)MathF.Round((c + 1f) * 100f / GPSChannelCount));
                 }
             }
-
         }
     }
 
