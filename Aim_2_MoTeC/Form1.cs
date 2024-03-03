@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Reflection;
-using System.Windows.Forms;
-using System.Drawing;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Aim_2_MoTeC
 {
@@ -45,6 +39,16 @@ namespace Aim_2_MoTeC
             ThemeCheckBox.Checked          = Properties.Settings.Default.S_UseDarkTheme;
 
             UpdateTheme();
+
+            try
+            {
+                Console.WriteLine("Library date: " + XRK.GetLibraryDate());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Testing the XRK Lib failed ! You should contact Ludovic to tell him");
+                Console.WriteLine(ex.Message);
+            }
         }
         /// <summary>
         /// Event handler for the "Browse" button click event.

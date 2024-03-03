@@ -1,17 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Windows.Forms;
-using System.Data;
-using System.Threading.Channels;
-
+﻿using System.ComponentModel;
 namespace Aim_2_MoTeC
 {
     using static XRK;
@@ -97,8 +84,8 @@ namespace Aim_2_MoTeC
         /// <exception cref="Exception">Thrown when certain operations, such as ID retrieval, fail.</exception>
         public static void Read(string filePath, bool useRawGPS, out List<string> data, out List<string> names)
         {
-            data = new List<string>();
-            names = new List<string>();
+            data = new();
+            names = new();
 
             if (!getID(filePath, out int id)) throw new Exception("Failed to get ID using dll");
 

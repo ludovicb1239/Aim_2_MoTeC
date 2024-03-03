@@ -1,6 +1,3 @@
-using System;
-using System.Windows.Forms;
-
 namespace Aim_2_MoTeC
 {
     static class Program

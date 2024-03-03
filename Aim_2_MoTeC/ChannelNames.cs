@@ -1,8 +1,4 @@
-﻿using Aim_2_MoTeC;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Aim_2_MoTeC
 {
