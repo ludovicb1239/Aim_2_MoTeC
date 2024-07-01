@@ -341,8 +341,9 @@ namespace Aim_2_MoTeC
             f.Write(scale);
             f.Write(dec);
             f.Write(nameBytes);
-            f.Write(unitBytes);
             f.Write(shortNameBytes);
+            f.Write(unitBytes);
+
 
             f.Write((byte)201);
             f.Write(new byte[39]);
